@@ -1,24 +1,75 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Title:</strong>
+  <strong>題名:</strong>
   <%= @book.title %>
 </p>
 
 <p>
-  <strong>Price:</strong>
+  <strong>金額:</strong>
   <%= @book.price %>
 </p>
 
 <p>
-  <strong>Description:</strong>
+  <strong>説明:</strong>
   <%= @book.description %>
 </p>
 
 <p>
-  <strong>Rating:</strong>
+  <strong>評価:</strong>
   <%= @book.rating %>
 </p>
+
+
+<h3>コメント一覧</h3>
+ <ul>
+ <% if @book.comments.any? %>
+ <% @book.comments.each do |comment| %>
+
+ 
+ <li id="comment_<%= comment.id %>">
+ <%= comment.body %>  (by <%= comment.commenter %>) <%= comment.created_at.strftime("%Y\t%m/%d\t%H:%M") %>
+ <%= link_to 'delete', [comment.book, comment], :confirm => 'Sure?',
+ 												:method => :delete,
+ 												:remote => true %>
+ </li>
+ <% end %>
+ <% else %>
+ <li>no comment yet.</li>
+ <% end %>
+ </ul>
+
+ <h3>コメントする</h3>
+ <%= form_for([@book, @comment]) do |f| %>
+
+ <% if @comment.errors.any? %>
+ <ul>
+ <% @comment.errors.full_messages.each do |msg| %>
+ <li><%= msg %></li>
+ <% end %>
+ </ul>
+ <% end %>
+
+  <div class="field">
+    <%= f.label :投稿者 %>
+    <%= f.text_field :commenter %>
+  </div>
+
+  <div class="field">
+    <%= f.label :本文 %>
+    <%= f.text_area :body, :rows => 5, :cols => 40 %>
+  </div>
+
+  <div class="field">
+    <%= f.submit %>
+  </div>
+
+ <% end %>
+
+ 
+
+
+ 
 
 <%= link_to 'Edit', edit_book_path(@book) %> |
 <%= link_to 'Back', books_path %>
